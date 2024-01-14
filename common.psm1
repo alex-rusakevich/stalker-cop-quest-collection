@@ -1,4 +1,5 @@
 #Requires -Version 5.1
+
 <#
     .SYNOPSIS
         Набор общих для скриптов функций

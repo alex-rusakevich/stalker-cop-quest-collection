@@ -1,4 +1,5 @@
 #Requires -Version 5.1
+
 <#
     .SYNOPSIS
         Добавить файл к проекту
@@ -51,8 +52,6 @@ $workspace_path = ('.\gamedata\' + ($file_path -replace '.*\\gamedata\\', ''))
 New-Item (Split-Path $workspace_path) -ItemType Directory -Force
 Copy-Item -Path $file_path -Destination $workspace_path -Recurse
 Move-Item -Path $file_path -Destination ($file_path + ".bak")
-
-$workspace_path = $workspace_path
 
 Write-Host "Создание ссылки на ${workspace_path}..."
 
