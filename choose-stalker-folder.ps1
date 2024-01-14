@@ -1,11 +1,27 @@
-#
-# Выбрать папку Сталкера для работы
-# Александр Русакевич, 2024
-#
+#Requires -Version 5.1
+<#
+    .SYNOPSIS
+        Выбрать папку Сталкера: ЗП для работы
+
+    .NOTES
+        Автор: Александр Русакевич
+        Год: 2024
+#>
+
+# region Variables
 
 $ErrorActionPreference = "Stop"
 
+# endregion
+
+# region Import
+
 [void] [Reflection.Assembly]::LoadWithPartialName( 'System.Windows.Forms' )
+Import-Module -Name .\common.psm1
+
+# endregion
+
+# region Main
 
 $open_folder_dialog = New-Object Windows.Forms.FolderBrowserDialog
 $open_folder_dialog.rootfolder = "MyComputer"
@@ -19,8 +35,9 @@ if($open_folder_dialog.ShowDialog() -eq "OK")
 } 
 else 
 {
-    write-host "Не выбрано никакой папки"
-    return
+    GUIThrowException 'Не выбрано никакой папки'
 }
 
 $folder > .stalkerpath
+
+# endregion

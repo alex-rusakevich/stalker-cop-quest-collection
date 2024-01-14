@@ -1,16 +1,36 @@
-#
-# Добавить файл в проект
-# Александр Русакевич, 2024
-#
+#Requires -Version 5.1
+<#
+    .SYNOPSIS
+        Добавить файл к проекту
+    
+    .DESCRIPTION
+        Создать файл .bak с копией оригинала, переместить оригинал в рабочую папку, 
+        создать на него ссылку в папке игры
+
+    .NOTES
+        Автор: Александр Русакевич
+        Год: 2024
+#>
+
+# region Variables
 
 $ErrorActionPreference = "Stop"
 
-$STALKER_PATH = (Get-Content .\.stalkerpath).Trim()
+# endregion
+
+# region Import
 
 [void] [Reflection.Assembly]::LoadWithPartialName( 'System.Windows.Forms' )
+Import-Module -Name .\common.psm1
+
+#endregion
+
+#region Main
+
+$StalkerPath = Get-StalkerPath
 
 $open_dialog = New-Object Windows.Forms.OpenFileDialog
-$open_dialog.InitialDirectory = $STALKER_PATH
+$open_dialog.InitialDirectory = $StalkerPath
 $file_path = ""
 
 if($open_dialog.ShowDialog() -eq "OK") {
@@ -18,12 +38,11 @@ if($open_dialog.ShowDialog() -eq "OK") {
 } 
 else 
 {
-    write-host "Не был выбран никакой файл"
-    return
+    GUIThrowException "Не был выбран никакой файл"
 }
 
-if(!($file_path -match ([regex]::escape($STALKER_PATH) + "\\gamedata\\.*"))){
-    write-host "Был выбран файл не из папки gamedata"
+if(!($file_path -match ([regex]::escape($StalkerPath) + "\\gamedata\\.*"))){
+    GUIThrowException "Был выбран файл не из папки gamedata игры"
     return
 }
 
@@ -38,3 +57,5 @@ $workspace_path = $workspace_path
 Write-Host "Создание ссылки на ${workspace_path}..."
 
 cmd /c mklink /H `"$file_path`" `"$workspace_path`"
+
+# endregion
